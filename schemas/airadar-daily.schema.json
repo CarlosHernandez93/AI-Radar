@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contrato diario de AI Radar",
+  "description": "Registro versionado de una búsqueda diaria. Impacto, acción y estado son valoraciones editoriales; evidence.verification describe únicamente la validación de la evidencia.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "date",
+    "timezone",
+    "language",
+    "search",
+    "signals"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "format": "date"
+    },
+    "timezone": {
+      "type": "string",
+      "const": "America/Bogota"
+    },
+    "language": {
+      "type": "string",
+      "const": "es"
+    },
+    "search": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query",
+        "method",
+        "queries",
+        "notes"
+      ],
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "queries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "signals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "source",
+          "category",
+          "evidence",
+          "impact",
+          "action",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "url",
+              "published_date",
+              "type",
+              "access"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              "published_date": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "format": "date"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "primaria",
+                  "secundaria"
+                ]
+              },
+              "access": {
+                "type": "string",
+                "enum": [
+                  "pagina_completa",
+                  "extracto_buscador"
+                ]
+              }
+            }
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "investigacion_seguridad",
+              "anuncio_producto",
+              "investigacion_clinica",
+              "politica_proveedor",
+              "encuesta",
+              "investigacion",
+              "infraestructura",
+              "regulacion",
+              "otro"
+            ]
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "summary",
+              "limitations",
+              "verification"
+            ],
+            "properties": {
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limitations": {
+                "type": "string",
+                "minLength": 1
+              },
+              "verification": {
+                "type": "string",
+                "enum": [
+                  "fuente_consultada",
+                  "corroborada",
+                  "reproducida"
+                ]
+              }
+            }
+          },
+          "impact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "level",
+              "rationale"
+            ],
+            "properties": {
+              "level": {
+                "type": "string",
+                "enum": [
+                  "alto",
+                  "medio",
+                  "bajo"
+                ]
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "action": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "description",
+              "status"
+            ],
+            "properties": {
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pendiente",
+                  "en_curso",
+                  "completada",
+                  "descartada"
+                ]
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "revisar_prioridad",
+              "candidato_prueba",
+              "seguir_investigacion",
+              "revision_programada",
+              "monitorear",
+              "descartada"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
